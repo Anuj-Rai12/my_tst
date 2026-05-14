@@ -243,10 +243,33 @@ fun UploadDocumentsScreen(navHostController: NavHostController,
                 }
 
                 CommonUtils.STATUS.COMPLETED.sttausname -> {
-                    navHostController.navigate(Screen.DashboardScreen.route) {
-                        popUpTo(0) {
-                            inclusive = true
+                    if (item?.requesttype?.contains("Replacement") == true) {
+                        viewModel.updateSubRequestTypeToInstallation(itemMain?.workid ?: 0, item.requestid)
+                    } else {
+                        navHostController.navigate(Screen.DashboardScreen.route) {
+                            popUpTo(0) {
+                                inclusive = true
+                            }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.localDbUpdateSuccess.collect { isSuccess ->
+            if (isSuccess) {
+                SelectedRequestHolder.selectedSUbWorkItemList = SelectedRequestHolder.selectedSUbWorkItemList?.copy(requesttype = "Installation")
+                navHostController.navigate(Screen.JobInstallationDetailScreen.route) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                }
+            } else {
+                navHostController.navigate(Screen.DashboardScreen.route) {
+                    popUpTo(0) {
+                        inclusive = true
                     }
                 }
             }

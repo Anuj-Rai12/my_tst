@@ -622,5 +622,22 @@ class AuthRepository @Inject constructor(
     suspend fun deviceUnbind(request: UnbindDeviceRequest): EmpResource<UnbindDeviceResponse> =
         safeApiCall { apiService.unbindDevice(request = request) }
 
+    suspend fun updateSubRequestTypeToInstallation(workId: Int, requestId: String): Boolean {
+        try {
+            val workOrder = dao.getWorkOrderById(workId) ?: return false
+            val updatedList = workOrder.woRequest.map {
+                if (it.requestid == requestId) {
+                    it.copy(requesttype = "Installation")
+                } else {
+                    it
+                }
+            }
+            dao.updateWorkOrder(workOrder.copy(workStatus = "INPROGRESS",woRequest = updatedList))
+            return true
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "Error updating sub request type: ${e.message}")
+            return false
+        }
+    }
 }
 

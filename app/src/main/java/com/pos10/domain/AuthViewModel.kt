@@ -576,6 +576,16 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    private val _localDbUpdateSuccess = MutableSharedFlow<Boolean>()
+    val localDbUpdateSuccess = _localDbUpdateSuccess.asSharedFlow()
+
+    fun updateSubRequestTypeToInstallation(workId: Int, requestId: String) {
+        viewModelScope.launch {
+            val success = authRepository.updateSubRequestTypeToInstallation(workId, requestId)
+            _localDbUpdateSuccess.emit(success)
+        }
+    }
+
     private val _updateWorkOrderCompleted = MutableSharedFlow<String>() // emit status
     val updateWorkOrderCompleted = _updateWorkOrderCompleted.asSharedFlow()
 
