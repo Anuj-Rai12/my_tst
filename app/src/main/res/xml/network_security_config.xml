@@ -1,0 +1,7 @@
+<network-security-config>
+	<base-config cleartextTrafficPermitted="true" />
+	<domain-config cleartextTrafficPermitted="true">
+		<domain includeSubdomains="true">sea-pos.com</domain>
+		<domain includeSubdomains="true">pay10.asia</domain>
+	</domain-config>
+</network-security-config>
